@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+<head>
+    <title>Packer Login</title>
+
+    <style>
+        .center {
+          margin: auto;
+          width: 75%;
+          border: 4px solid #FFFFFF;
+          border-radius: 16px;
+          border-top-left-radius: 16px;
+          border-top-right-radius: 16px;
+          border-bottom-right-radius: 16px;
+          border-bottom-left-radius: 16px;
+          padding: 10px;
+          text-align: center;
+          color: #FFFFFF;
+        }
+        .background_c {
+            background: #1b1a31;
+
+            position: fixed; /* Fixed relative to the browser window */
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-repeat: no-repeat;
+            background: linear-gradient(50deg, rgb(9, 14, 29) 0%, rgb(38, 19, 59) 100%);
+            z-index: -1;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="background_c"></div>
+<div class="center">
+
+<h1>Welcome to Packer</h1>
+<p>Generate an Auth Code using "/packer auth" in game.</p>
+
+
+<form action='/login' method='POST'>
+    <label for="authcode">Auth Code:</label>
+    <input type="text" id="authcode" name="authcode"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+</div>
+</body>
+</html>
