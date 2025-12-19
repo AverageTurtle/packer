@@ -3,17 +3,16 @@
 	"id": "packer",
 	"version": "${version}",
 	"name": "Packer",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Survival friendly, dynamic, server-side custom models for Minecraft!",
 	"authors": [
-		"Me!"
+		"Sam L"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/AverageTurtle/packer"
 	},
-	"license": "CC0-1.0",
+	"license": "Apache License 2.0",
 	"icon": "assets/packer/icon.png",
-	"environment": "*",
+	"environment": "server",
 	"entrypoints": {
 		"main": [
 			"sam.packer.Packer"
@@ -23,7 +22,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.18.1",
-		"minecraft": "~1.21.10",
+		"minecraft": ">=1.21.10",
 		"java": ">=21",
 		"fabric-api": "*"
 	},
