@@ -284,8 +284,8 @@ public class PackerManager {
                         context.getSource().sendFailure(Component.literal("You must be holding an item!"));
                         return 0;
                     }
-                    stack.remove(DataComponents.ITEM_MODEL);
-                    stack.applyComponents(stack.getItem().components());
+                    stack.set(DataComponents.ITEM_MODEL, stack.getItem().components().get(DataComponents.ITEM_MODEL));
+                    
                     return 1;
                 }));
         node.then(model_node);
