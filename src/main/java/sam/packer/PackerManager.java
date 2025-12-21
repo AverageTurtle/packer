@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -47,11 +48,21 @@ public class PackerManager {
             public String subdir() {
                 return "textures";
             }
+
+            @Override
+            public boolean is_valid_extension(String extension) {
+                return extension.equals("png") || extension.equals("mcmeta");
+            }
         },
         model{
             @Override
             public String subdir() {
                 return "models";
+            }
+
+            @Override
+            public boolean is_valid_extension(String extension) {
+                return extension.equals("json");
             }
         },
         item_definition {
@@ -59,9 +70,15 @@ public class PackerManager {
             public String subdir() {
                 return "items";
             }
+
+            @Override
+            public boolean is_valid_extension(String extension) {
+                return extension.equals("json");
+            }
         };
 
         public abstract String subdir();
+        public abstract boolean is_valid_extension(String extension);
 
         public static AssetType from_string(String type) {
             switch (type) {
@@ -123,6 +140,14 @@ public class PackerManager {
     }
 
     public void upload_file(UUID uploader, AssetType type, String name, byte[] contents) throws IOException {
+        // Check contents
+        if(contents.length > PackerConfig.max_upload_bytes) throw new IOException("File too big. Limit: "+PackerConfig.max_upload_bytes+" Bytes");
+
+        var split_name = name.split("\\.");
+        var ext = split_name[split_name.length-1];
+        if(!type.is_valid_extension(ext)) throw new IOException("Invalid extension for upload type!");
+
+        // Preform upload
         Path user_path = assets_path.resolve(uploader.toString());
         if(!Files.exists(user_path)) { Files.createDirectory(user_path); }
         Path asset_path = user_path.resolve(type.subdir());
@@ -173,8 +198,6 @@ public class PackerManager {
 
         String url = "http://"+PackerConfig.server_address + ":" + PackerConfig.port + "/api/pack.zip";
         String hash = getSHA1(zip_path.toFile());
-        Packer.LOGGER.info(url);
-        Packer.LOGGER.info(hash);
         packinfo = new MinecraftServer.ServerResourcePackInfo(UUID.randomUUID(), url,
                 hash, true, Component.literal("Please accept the Packer resource pack!."));
     }
@@ -285,7 +308,7 @@ public class PackerManager {
                         return 0;
                     }
                     stack.set(DataComponents.ITEM_MODEL, stack.getItem().components().get(DataComponents.ITEM_MODEL));
-                    
+
                     return 1;
                 }));
         node.then(model_node);
