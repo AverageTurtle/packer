@@ -5,7 +5,7 @@ Survival friendly, dynamic, server-side custom models for Minecraft!
 
 
 ## What is Packer?
-Packer allows you to upload, manage, and utilize custom models in survival Minecraft servers. Using a mix of a user-friendly(ish) web portal and ingame commands. Complete with dynamic reloading of uploaded pack data. Plus commands for apply models to items in a survival friendly way!
+Packer allows you to upload, manage, and utilize custom models in survival Minecraft servers. Using a mix of a user-friendly(ish) web portal and ingame commands. Complete with dynamic reloading of uploaded pack data. Plus commands to apply models to items in a survival friendly way!
 
 
 ## Getting started
