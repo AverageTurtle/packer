@@ -20,11 +20,10 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -33,7 +32,6 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -146,6 +144,12 @@ public class PackerManager {
         var split_name = name.split("\\.");
         var ext = split_name[split_name.length-1];
         if(!type.is_valid_extension(ext)) throw new IOException("Invalid extension for upload type!");
+
+        if(ext.equals("png")) {
+            if(!png_is_mipmap_safe(contents)) {
+                throw new IOException("Image resolution must be a power of 2!");
+            }
+        }
 
         // Replace packer_id
         if(ext.equals("json")) {
@@ -383,5 +387,31 @@ public class PackerManager {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+
+    private boolean png_is_mipmap_safe(byte @NotNull [] contents) throws IOException {
+        if(contents.length == 0) return false;
+        var bais = new ByteArrayInputStream(contents);
+        var iis = ImageIO.createImageInputStream(bais);
+
+        var readers = ImageIO.getImageReaders(iis);
+        if(!readers.hasNext()) {
+            return false;
+        }
+
+        var reader = readers.next();
+        try {
+            reader.setInput(iis);
+            int width = reader.getWidth(0);
+            int height = reader.getHeight(0);
+
+            return is_power_of_two(width) && is_power_of_two(height);
+        } finally {
+            reader.dispose();
+        }
+    }
+
+    private boolean is_power_of_two(int n) {
+        return (n > 0) && ((n & (n - 1)) == 0);
     }
 }
