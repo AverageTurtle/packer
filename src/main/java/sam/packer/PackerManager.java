@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,7 +36,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -81,12 +81,12 @@ public class PackerManager {
         public abstract boolean is_valid_extension(String extension);
 
         public static AssetType from_string(String type) {
-            switch (type) {
-                case "item-definition": return AssetType.item_definition;
-                case "model": return AssetType.model;
-                case "texture": return AssetType.texture;
-            }
-            return null;
+            return switch (type) {
+                case "item-definition" -> AssetType.item_definition;
+                case "model" -> AssetType.model;
+                case "texture" -> AssetType.texture;
+                default -> null;
+            };
         }
     }
 
@@ -146,6 +146,13 @@ public class PackerManager {
         var split_name = name.split("\\.");
         var ext = split_name[split_name.length-1];
         if(!type.is_valid_extension(ext)) throw new IOException("Invalid extension for upload type!");
+
+        // Replace packer_id
+        if(ext.equals("json")) {
+            var str = new String(contents, StandardCharsets.UTF_8);
+            str = str.replaceAll("packer_id", uploader.toString());
+            contents = str.getBytes(StandardCharsets.UTF_8);
+        }
 
         // Preform upload
         Path user_path = assets_path.resolve(uploader.toString());
@@ -358,7 +365,7 @@ public class PackerManager {
 
     public static String getSHA1(File file) throws IOException {
         MessageDigest digest = null;
-        try { digest = MessageDigest.getInstance("SHA-1"); } catch(NoSuchAlgorithmException ignore) {};
+        try { digest = MessageDigest.getInstance("SHA-1"); } catch(NoSuchAlgorithmException ignore) {}
         assert digest != null;
 
         FileInputStream fis = new FileInputStream(file);
