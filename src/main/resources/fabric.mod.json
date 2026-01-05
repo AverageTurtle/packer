@@ -14,7 +14,7 @@
 	"icon": "assets/packer/icon.png",
 	"environment": "server",
 	"entrypoints": {
-		"main": [
+		"server": [
 			"sam.packer.Packer"
 		]
 	},

@@ -1,6 +1,6 @@
 package sam.packer;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.DedicatedServerModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import sam.packer.web.PackerServer;
 
 
-public class Packer implements ModInitializer {
+public class Packer implements DedicatedServerModInitializer {
 
 	public static final String MOD_ID = "packer";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -20,13 +20,11 @@ public class Packer implements ModInitializer {
 
     protected static PackerManager packer_manger;
 
-	@Override
-	public void onInitialize() {
-
+    @Override
+    public void onInitializeServer() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> PackerManager.register_command(dispatcher));
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            if(!server.isDedicatedServer()) return;
             PackerConfig.load();
             packer_manger = new PackerManager((DedicatedServer) server);
             packer_server = new PackerServer(packer_manger, PackerConfig.port);
@@ -38,9 +36,6 @@ public class Packer implements ModInitializer {
             packer_manger.player_leaving(player);
             packer_server.player_leaving(player);
         });
-
-	}
-
-
+    }
 }
 
