@@ -40,7 +40,7 @@ public class UploadHandler implements HttpHandler {
 
         String boundary = content_type.substring(content_type.indexOf("boundary=")+9);
         var multipart = MultipartParser.parse(exchange.getRequestBody(), boundary);
-        String asset_type_string = multipart.get("asset-upload-type").toString();
+        String asset_type_string = multipart.get("asset-type").toString();
 
         PackerManager.AssetType asset_type = switch (asset_type_string) {
             case "item-definition" -> PackerManager.AssetType.item_definition;

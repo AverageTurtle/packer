@@ -37,10 +37,11 @@
 <div class="background_c"></div>
 <div class="center">
 
-<form id="asset-upload-form" name="asset-upload-form" enctype="multipart/form-data">
-    <h2>Upload</h2>
+<h2>Manage Uploads</h2>
+<p>Run /packer rezip to update the pack!</p>
 
-    <select id="asset-upload-type" name="asset-upload-type">
+<form id="asset-upload-form" name="asset-upload-form" enctype="multipart/form-data">
+    <select id="asset-type" name="asset-type" onchange="renderAssets()">
         <option value="">-- Select Type --</option>
         <option value="item-definition">Item Definition (.json)</option>
         <option value="model">Model (.json)</option>
@@ -50,23 +51,9 @@
     <input type="submit", value="Upload">
 </form>
 
-<p>Run /packer rezip to update the pack!</p>
-
-<form id="asset-view-form">
-    <h2>Manage Uploads</h2>
-
-    <label for="asset-type">Asset Type:</label>
-    <select id="asset-type" name="asset-type" onchange="renderAssets()">
-        <option value="">-- Select Type --</option>
-        <option value="item-definition">Item Definitions (.json)</option>
-        <option value="model">Models (.json)</option>
-        <option value="texture">Textures (.png)</option>
-    </select>
-</form>
-
 <br>
-
 <ul id="asset-list"></ul>
+
 </div>
 </body>
 
@@ -77,7 +64,7 @@
 
         const formData = new FormData(this)
 
-        if (!formData.get('asset-upload-type') || formData.get('asset-file').size === 0) {
+        if (!formData.get('asset-type') || formData.get('asset-file').size === 0) {
             alert("Please select a type and a file.");
             return;
         }
