@@ -14,7 +14,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPopPacket;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -305,7 +305,7 @@ public class PackerManager {
                         context.getSource().sendFailure(Component.literal("You must be holding an item!"));
                         return 0;
                     }
-                    stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(player.getStringUUID(), input_model));
+                    stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath(player.getStringUUID(), input_model));
 
                     return 1;
                 })));
